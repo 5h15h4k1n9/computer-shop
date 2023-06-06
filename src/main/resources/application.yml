@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:file:./data/computer-shop-db
+    username: sa
+    password: password
+  h2:
+    console:
+      enabled: off
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
