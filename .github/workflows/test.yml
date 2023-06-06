@@ -4,7 +4,8 @@ on:
     branches: [ master ]
   push:
 jobs:
-  build:
+  test-ubuntu:
+    name: Test on Ubuntu
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -26,4 +27,4 @@ jobs:
       - name: Show test results
         uses: mikepenz/action-junit-report@v2
         with:
-          files: target/surefire-reports/TEST-*.xml
+          report_paths: '**/surefire-reports/TEST-*.xml'

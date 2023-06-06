@@ -5,6 +5,7 @@ on:
   push:
 jobs:
   build-ubuntu:
+    name: Build on Ubuntu
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -26,6 +27,7 @@ jobs:
         run: ./mvnw compile
 
   build-macos:
+    name: Build on macOS
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
@@ -47,6 +49,7 @@ jobs:
         run: ./mvnw compile
 
   build-windows:
+    name: Build on Windows
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
