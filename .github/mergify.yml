@@ -1,0 +1,30 @@
+pull_request_rules:
+  - name: Automatic merge to master on successful build if it's not WIP
+    conditions:
+      - base=master
+      - check-success=build
+      - check-success=test
+      - -title~=(?i)wip
+    actions:
+      merge:
+        method: merge
+      assign:
+        add_users:
+          - 5h15h4k1n9
+  - name: Add `java` label, if files associated with Kotlin were changed
+    conditions:
+      - and:
+        - files~=\.java$
+    actions:
+      label:
+        add:
+          - java
+  - name: Add `yml` label, if files associated with YAML were changed
+    conditions:
+      - and:
+        - files~=\.yml$
+        - files~=\.yaml$
+    actions:
+      label:
+        add:
+          - yml
