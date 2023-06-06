@@ -19,12 +19,19 @@ pull_request_rules:
       label:
         add:
           - java
-  - name: Add `yml` label, if files associated with YAML were changed
+  - name: Add `config` label, if files associated with configs were changed
     conditions:
       - and:
         - files~=\.yml$
         - files~=\.yaml$
+        - files~=\.properties$
+        - files~=\.xml$
+        - files~=\.json$
+        - files~=\.ini$
+        - files~=\.conf$
+        - files~=\.cfg$
+        - files~=\.toml$
     actions:
       label:
         add:
-          - yml
+          - config
