@@ -17,6 +17,7 @@ import ru.hh.spb.computershop.responses.ShopResponse;
 import ru.hh.spb.computershop.responses.SuccessfulResponse;
 import ru.hh.spb.computershop.services.ManufacturerService;
 import ru.hh.spb.computershop.services.ProductService;
+import ru.hh.spb.computershop.visitor.UpdateProductVisitor;
 
 import java.util.List;
 import java.util.Map;
@@ -388,10 +389,96 @@ public class ProductController {
         }
 
         String computerTypeString = params.get(ResponseParameter.COMPUTER_TYPE);
-        String sizeString = params.get(ResponseParameter.NOTEBOOK_SIZE);
-        String diagonalString = params.get(ResponseParameter.DIAGONAL);
-        String volumeString = params.get(ResponseParameter.VOLUME);
+        if (Objects.nonNull(computerTypeString)) {
+            product.accept(new UpdateProductVisitor(), computerTypeString);
+            isUpdated = true;
 
+            productService.updateProduct(product);
+            logger.info("Product with serial number {} successfully updated", serialNumber);
+
+            return new ResponseEntity<>(
+                    new SuccessfulResponse(ResponseType.OBJECT, product, String.valueOf(System.currentTimeMillis())),
+                    HttpStatus.OK
+            );
+        }
+
+        String sizeString = params.get(ResponseParameter.NOTEBOOK_SIZE);
+        if (Objects.nonNull(sizeString)) {
+            if (!sizeString.matches("\\d{1,2}")) {
+                logger.warn("Invalid notebook size {}", sizeString);
+
+                ErrorResponse errorResponse = new ErrorResponse(
+                        "Invalid notebook size " + sizeString,
+                        HttpStatus.BAD_REQUEST,
+                        String.valueOf(System.currentTimeMillis())
+                );
+
+                return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+            }
+
+            product.accept(new UpdateProductVisitor(), sizeString);
+            isUpdated = true;
+
+            productService.updateProduct(product);
+            logger.info("Product with serial number {} successfully updated", serialNumber);
+
+            return new ResponseEntity<>(
+                    new SuccessfulResponse(ResponseType.OBJECT, product, String.valueOf(System.currentTimeMillis())),
+                    HttpStatus.OK
+            );
+        }
+
+        String diagonalString = params.get(ResponseParameter.DIAGONAL);
+        if (Objects.nonNull(diagonalString)) {
+            if (!diagonalString.matches("\\d{1,2}")) {
+                logger.warn("Invalid diagonal {}", diagonalString);
+
+                ErrorResponse errorResponse = new ErrorResponse(
+                        "Invalid diagonal " + diagonalString,
+                        HttpStatus.BAD_REQUEST,
+                        String.valueOf(System.currentTimeMillis())
+                );
+
+                return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+            }
+
+            product.accept(new UpdateProductVisitor(), diagonalString);
+            isUpdated = true;
+
+            productService.updateProduct(product);
+            logger.info("Product with serial number {} successfully updated", serialNumber);
+
+            return new ResponseEntity<>(
+                    new SuccessfulResponse(ResponseType.OBJECT, product, String.valueOf(System.currentTimeMillis())),
+                    HttpStatus.OK
+            );
+        }
+
+        String volumeString = params.get(ResponseParameter.VOLUME);
+        if (Objects.nonNull(volumeString)) {
+            if (!volumeString.matches("\\d+")) {
+                logger.warn("Invalid volume {}", volumeString);
+
+                ErrorResponse errorResponse = new ErrorResponse(
+                        "Invalid volume " + volumeString,
+                        HttpStatus.BAD_REQUEST,
+                        String.valueOf(System.currentTimeMillis())
+                );
+
+                return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+            }
+
+            product.accept(new UpdateProductVisitor(), volumeString);
+            isUpdated = true;
+
+            productService.updateProduct(product);
+            logger.info("Product with serial number {} successfully updated", serialNumber);
+
+            return new ResponseEntity<>(
+                    new SuccessfulResponse(ResponseType.OBJECT, product, String.valueOf(System.currentTimeMillis())),
+                    HttpStatus.OK
+            );
+        }
 
         if (isUpdated) {
             productService.updateProduct(product);
