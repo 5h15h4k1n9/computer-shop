@@ -425,7 +425,6 @@ public class ProductController {
         String computerTypeString = params.get(ResponseParameter.COMPUTER_TYPE);
         if (Objects.nonNull(computerTypeString)) {
             product.accept(new UpdateProductVisitor(), computerTypeString);
-            isUpdated = true;
 
             productService.updateProduct(product);
             logger.info("Product with serial number {} successfully updated", serialNumber);
@@ -451,7 +450,6 @@ public class ProductController {
             }
 
             product.accept(new UpdateProductVisitor(), sizeString);
-            isUpdated = true;
 
             productService.updateProduct(product);
             logger.info("Product with serial number {} successfully updated", serialNumber);
@@ -477,7 +475,6 @@ public class ProductController {
             }
 
             product.accept(new UpdateProductVisitor(), diagonalString);
-            isUpdated = true;
 
             productService.updateProduct(product);
             logger.info("Product with serial number {} successfully updated", serialNumber);
@@ -503,7 +500,6 @@ public class ProductController {
             }
 
             product.accept(new UpdateProductVisitor(), volumeString);
-            isUpdated = true;
 
             productService.updateProduct(product);
             logger.info("Product with serial number {} successfully updated", serialNumber);
