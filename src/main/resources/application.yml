@@ -19,3 +19,5 @@ logging:
     rollingpolicy:
       clean-history-on-start: false
       max-history: 31
+app:
+  version: 1.0.0

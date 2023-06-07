@@ -10,7 +10,7 @@
     </parent>
     <groupId>ru.hh.spb</groupId>
     <artifactId>computer-shop</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>computer-shop</name>
     <description>computer-shop</description>
     <properties>
