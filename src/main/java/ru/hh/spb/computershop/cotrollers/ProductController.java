@@ -56,6 +56,29 @@ public class ProductController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping("/all/{productType}")
+    public ResponseEntity<ShopResponse> getAllProductsByType(@PathVariable String productType) {
+        logger.info("Client requested all products with type {}", productType);
+
+        ProductType type = ProductType.fromValue(productType);
+        List<Product> products = productService.getProductsByType(type);
+        int count = products.size();
+
+        logger.info("Returning {} products with type {}", count, productType);
+        Map<String, Object> data = Map.of(
+                "count", count,
+                "products", products
+        );
+
+        ShopResponse response = new SuccessfulResponse(
+                ResponseType.LISTING,
+                data,
+                String.valueOf(System.currentTimeMillis())
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @GetMapping("/product")
     public ResponseEntity<Object> getProductById(@RequestParam Long id) {
         logger.info("Client requested product with id {}", id);
