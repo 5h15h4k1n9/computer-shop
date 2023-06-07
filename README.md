@@ -7,7 +7,7 @@
 
 # Computer shop
 
-This is a simple computer shop application for EasyBot task.
+This is a simple computer shop application for EasyBot task. Documentation available locally on `localhost:8080/swagger-ui/index.html`
 
 ## How to run
 
