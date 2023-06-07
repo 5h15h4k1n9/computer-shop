@@ -2,7 +2,7 @@ package ru.hh.spb.computershop.data;
 
 public enum ResponseType {
 
-    PRODUCT("product"), PRODUCT_LIST("product_list");
+    OBJECT("object"), LISTING("listing");
 
     private final String type;
 

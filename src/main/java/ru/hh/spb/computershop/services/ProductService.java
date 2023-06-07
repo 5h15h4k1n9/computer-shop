@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import ru.hh.spb.computershop.entities.*;
 import ru.hh.spb.computershop.data.ComputerType;
-import ru.hh.spb.computershop.data.Manufacturer;
 import ru.hh.spb.computershop.data.NotebookSize;
 import ru.hh.spb.computershop.data.ProductType;
 import ru.hh.spb.computershop.repositories.ProductRepository;

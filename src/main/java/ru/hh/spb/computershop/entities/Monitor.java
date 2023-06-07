@@ -2,8 +2,6 @@ package ru.hh.spb.computershop.entities;
 
 import jakarta.persistence.Entity;
 
-import ru.hh.spb.computershop.data.Manufacturer;
-
 @Entity
 public class Monitor extends Product {
 

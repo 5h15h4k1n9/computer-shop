@@ -2,7 +2,6 @@ package ru.hh.spb.computershop.entities;
 
 import jakarta.persistence.*;
 
-import ru.hh.spb.computershop.data.Manufacturer;
 import ru.hh.spb.computershop.data.ProductType;
 
 @Entity
@@ -24,11 +23,13 @@ public abstract class Product {
 
     Long count;
 
+    @ManyToOne
+    @JoinColumn(name = "manufacturer_id")
     Manufacturer manufacturer;
 
     public Product() {
         this.serialNumber = "";
-        this.manufacturer = Manufacturer.UNKNOWN;
+        this.manufacturer = null;
         this.price = 0L;
         this.count = 0L;
     }
