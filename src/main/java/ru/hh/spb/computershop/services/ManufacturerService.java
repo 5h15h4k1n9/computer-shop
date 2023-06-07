@@ -18,13 +18,26 @@ public class ManufacturerService {
     ManufacturerRepository manufacturerRepository;
 
     public Manufacturer saveManufacturer(String name) {
-        logger.info("Adding manufacturer with name: {}", name);
+        logger.info("Adding manufacturer with name '{}'", name);
         if (isManufacturerExists(name)) {
             logger.info("Manufacturer with name: {} already exists", name);
             return null;
         }
 
         return manufacturerRepository.save(new Manufacturer(name));
+    }
+
+    public Manufacturer deleteManufacturer(String name) {
+        logger.info("Deleting manufacturer with name '{}'", name);
+
+        Manufacturer manufacturer = getManufacturerByName(name);
+        if (manufacturer == null) {
+            logger.info("Manufacturer with name '{}' doesn't exist", name);
+            return null;
+        }
+
+        manufacturerRepository.delete(manufacturer);
+        return manufacturer;
     }
 
     public Manufacturer getManufacturerByName(String name) {
@@ -38,7 +51,7 @@ public class ManufacturerService {
     }
 
     private boolean isManufacturerExists(String name) {
-        logger.info("Checking if manufacturer with name: {} exists", name);
+        logger.info("Checking if manufacturer with name '{}' exists", name);
         Iterable<Manufacturer> manufacturers = manufacturerRepository.findAll();
         for (Manufacturer manufacturer : manufacturers) {
             if (manufacturer.getName().equalsIgnoreCase(name)) {
