@@ -1,6 +1,6 @@
 package ru.hh.spb.computershop.enums;
 
-enum NotebookSize implements java.io.Serializable {
+public enum NotebookSize implements java.io.Serializable {
 
     UNKNOWN(0),
 
