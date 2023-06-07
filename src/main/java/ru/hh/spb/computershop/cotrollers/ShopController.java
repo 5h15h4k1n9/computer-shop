@@ -1,5 +1,6 @@
 package ru.hh.spb.computershop.cotrollers;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,9 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import ru.hh.spb.computershop.entities.Product;
-import ru.hh.spb.computershop.enums.ComputerType;
-import ru.hh.spb.computershop.enums.Manufacturer;
-import ru.hh.spb.computershop.enums.ResponseType;
+import ru.hh.spb.computershop.data.*;
 import ru.hh.spb.computershop.responses.ErrorResponse;
 import ru.hh.spb.computershop.responses.ShopResponse;
 import ru.hh.spb.computershop.responses.SuccessfulResponse;
@@ -73,50 +72,155 @@ public class ShopController {
         return new ResponseEntity<>(successfulResponse, HttpStatus.OK);
     }
 
-    @PostMapping("/products/product/add/computer")
+    @PostMapping("/products/product/add/{productType}")
     public ResponseEntity<ShopResponse> addComputer(
-            @RequestParam String serialNumber,
-            @RequestParam String manufacturer,
-            @RequestParam Long cost,
-            @RequestParam Long count,
-            @RequestParam String type
+            @NotNull @RequestParam Map<String, String> params,
+            @PathVariable String productType
     ) {
-        logger.info("Client requested to add computer with serial number {}", serialNumber);
+        logger.info("Client requested to add product with type {}", productType);
 
-        ResponseEntity<ShopResponse> manufacturerError = checkManufacturer(manufacturer);
-        if (Objects.nonNull(manufacturerError)) {
-            return manufacturerError;
+        ResponseEntity<ShopResponse> response;
+
+        String serialNumber = params.get(ResponseParameter.SERIAL_NUMBER);
+        response = checkParameter(serialNumber, ResponseParameter.SERIAL_NUMBER);
+        if (Objects.nonNull(response)) {
+            return response;
         }
-        Manufacturer manufacturerEnum = Manufacturer.valueOf(manufacturer);
 
-        try {
-            ComputerType computerType = ComputerType.valueOf(type);
-            Product product = productService.saveProduct(serialNumber, manufacturerEnum, cost, count, computerType);
+        String costString = params.get(ResponseParameter.COST);
+        response = checkParameter(costString, ResponseParameter.COST);
+        if (Objects.nonNull(response)) {
+            return response;
+        }
 
-            ResponseEntity<ShopResponse> errorResponse = checkProductIsExist(product, serialNumber);
-            if (Objects.nonNull(errorResponse)) {
-                return errorResponse;
+        String countString = params.get(ResponseParameter.COUNT);
+        response = checkParameter(countString, ResponseParameter.COUNT);
+        if (Objects.nonNull(response)) {
+            return response;
+        }
+
+        String manufacturerString = params.get(ResponseParameter.MANUFACTURER);
+        response = checkParameter(manufacturerString, ResponseParameter.MANUFACTURER);
+        if (Objects.nonNull(response)) {
+            return response;
+        }
+
+
+        Long cost = Long.parseLong(costString);
+        Long count = Long.parseLong(countString);
+        Manufacturer manufacturer = Manufacturer.fromValue(manufacturerString);
+
+        Product product;
+        switch (ProductType.fromValue(productType.toUpperCase())) {
+            case COMPUTER -> {
+                String computerTypeString = params.get(ResponseParameter.COMPUTER_TYPE);
+                response = checkParameter(computerTypeString, ResponseParameter.COMPUTER_TYPE);
+                if (Objects.nonNull(response)) {
+                    return response;
+                }
+
+                ComputerType computerType = ComputerType.fromValue(computerTypeString);
+                product = productService.saveProduct(serialNumber, manufacturer, cost, count, computerType);
             }
+            case NOTEBOOK -> {
+                String sizeString = params.get(ResponseParameter.NOTEBOOK_SIZE);
+                response = checkParameter(sizeString, ResponseParameter.NOTEBOOK_SIZE);
+                if (Objects.nonNull(response)) {
+                    return response;
+                }
 
-            SuccessfulResponse successfulResponse = new SuccessfulResponse(
-                    ResponseType.PRODUCT,
-                    product,
-                    String.valueOf(System.currentTimeMillis())
-            );
+                if (!sizeString.matches("\\d{1,2}")) {
+                    logger.warn("Invalid notebook size {}", sizeString);
 
-            logger.info("Successfully added computer with serial number {}", serialNumber);
-            return new ResponseEntity<>(successfulResponse, HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            logger.warn("Computer type {} is not valid", type);
+                    ErrorResponse errorResponse = new ErrorResponse(
+                            "Invalid notebook size " + sizeString,
+                            HttpStatus.BAD_REQUEST,
+                            String.valueOf(System.currentTimeMillis())
+                    );
+
+                    return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+                }
+
+                NotebookSize notebookSize = NotebookSize.fromValue(Integer.parseInt(sizeString));
+                product = productService.saveProduct(serialNumber, manufacturer, cost, count, notebookSize);
+            }
+            case MONITOR -> {
+                String diagonalString = params.get(ResponseParameter.DIAGONAL);
+                response = checkParameter(diagonalString, ResponseParameter.DIAGONAL);
+                if (Objects.nonNull(response)) {
+                    return response;
+                }
+
+                if (!diagonalString.matches("\\d{1,2}")) {
+                    logger.warn("Invalid monitor diagonal {}", diagonalString);
+
+                    ErrorResponse errorResponse = new ErrorResponse(
+                            "Invalid monitor diagonal " + diagonalString,
+                            HttpStatus.BAD_REQUEST,
+                            String.valueOf(System.currentTimeMillis())
+                    );
+
+                    return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+                }
+
+                Byte diagonal = Byte.parseByte(diagonalString);
+                product = productService.saveProduct(serialNumber, manufacturer, cost, count, diagonal);
+            }
+            case HDD -> {
+                String volumeString = params.get(ResponseParameter.VOLUME);
+                response = checkParameter(volumeString, ResponseParameter.VOLUME);
+                if (Objects.nonNull(response)) {
+                    return response;
+                }
+
+                if (!volumeString.matches("\\d+")) {
+                    logger.warn("Invalid HDD volume {}", volumeString);
+
+                    ErrorResponse errorResponse = new ErrorResponse(
+                            "Invalid HDD volume " + volumeString,
+                            HttpStatus.BAD_REQUEST,
+                            String.valueOf(System.currentTimeMillis())
+                    );
+
+                    return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+                }
+
+                Long volume = Long.parseLong(volumeString);
+                product = productService.saveProduct(serialNumber, manufacturer, cost, count, volume);
+            }
+            default -> {
+                logger.warn("Unknown product type {}", productType);
+
+                ErrorResponse errorResponse = new ErrorResponse(
+                        "Unknown product type " + productType,
+                        HttpStatus.BAD_REQUEST,
+                        String.valueOf(System.currentTimeMillis())
+                );
+
+                return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+            }
+        }
+
+        if (Objects.isNull(product)) {
+            logger.info("Product with serial number {} already exist", serialNumber);
 
             ErrorResponse errorResponse = new ErrorResponse(
-                    "Computer type " + type + " is not valid",
+                    "Product with serial number " + serialNumber + " already exist",
                     HttpStatus.BAD_REQUEST,
                     String.valueOf(System.currentTimeMillis())
             );
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
+
+        response = new ResponseEntity<>(
+                new SuccessfulResponse(ResponseType.PRODUCT, product, String.valueOf(System.currentTimeMillis())),
+                HttpStatus.OK
+        );
+
+        logger.info("Successfully added product with serial number {}", serialNumber);
+        return response;
     }
+
 
     @Nullable
     private ResponseEntity<ShopResponse> checkProductIsExist(Product product, String serialNumber) {
@@ -135,17 +239,16 @@ public class ShopController {
     }
 
     @Nullable
-    private ResponseEntity<ShopResponse> checkManufacturer(String manufacturerString) {
-        try {
-            Manufacturer manufacturer = Manufacturer.valueOf(manufacturerString);
-        } catch (IllegalArgumentException e) {
-            logger.warn("Manufacturer {} is not valid", manufacturerString);
+    private ResponseEntity<ShopResponse> checkParameter(String parameter, String parameterName) {
+        if (Objects.isNull(parameter)) {
+            logger.warn("Request parameter '{}' is not specified", parameterName);
 
             ErrorResponse errorResponse = new ErrorResponse(
-                    "Manufacturer " + manufacturerString + " is not valid",
+                    "Request parameter '" + parameterName + "' is not specified",
                     HttpStatus.BAD_REQUEST,
                     String.valueOf(System.currentTimeMillis())
             );
+
             return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
 
