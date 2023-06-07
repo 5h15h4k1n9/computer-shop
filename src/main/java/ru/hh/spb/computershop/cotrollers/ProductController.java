@@ -9,11 +9,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import ru.hh.spb.computershop.entities.Manufacturer;
 import ru.hh.spb.computershop.entities.Product;
 import ru.hh.spb.computershop.data.*;
 import ru.hh.spb.computershop.responses.ErrorResponse;
 import ru.hh.spb.computershop.responses.ShopResponse;
 import ru.hh.spb.computershop.responses.SuccessfulResponse;
+import ru.hh.spb.computershop.services.ManufacturerService;
 import ru.hh.spb.computershop.services.ProductService;
 
 import java.util.List;
@@ -21,31 +23,40 @@ import java.util.Map;
 import java.util.Objects;
 
 @RestController
-@RequestMapping("/v1/computer-shop/api")
-public class ShopController {
+@RequestMapping("/v1/computer-shop/api/products")
+public class ProductController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private ProductService productService;
 
-    @GetMapping("/products/all")
-    public ResponseEntity<Map<String, Object>> getAllProducts() {
+    @Autowired
+    private ManufacturerService manufacturerService;
+
+    @GetMapping("/all")
+    public ResponseEntity<ShopResponse> getAllProducts() {
         logger.info("Client requested all products");
 
         List<Product> products = productService.getAllProducts();
         int count = products.size();
 
         logger.info("Returning {} products", count);
-        Map<String, Object> response = Map.of(
+        Map<String, Object> data = Map.of(
                 "count", count,
                 "products", products
+        );
+
+        ShopResponse response = new SuccessfulResponse(
+                ResponseType.LISTING,
+                data,
+                String.valueOf(System.currentTimeMillis())
         );
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("products/product")
+    @GetMapping("/product")
     public ResponseEntity<Object> getProductById(@RequestParam Long id) {
         logger.info("Client requested product with id {}", id);
 
@@ -63,7 +74,7 @@ public class ShopController {
         }
 
         SuccessfulResponse successfulResponse = new SuccessfulResponse(
-                ResponseType.PRODUCT,
+                ResponseType.OBJECT,
                 product,
                 String.valueOf(System.currentTimeMillis())
         );
@@ -72,7 +83,7 @@ public class ShopController {
         return new ResponseEntity<>(successfulResponse, HttpStatus.OK);
     }
 
-    @PostMapping("/products/product/add/{productType}")
+    @PostMapping("/product/add/{productType}")
     public ResponseEntity<ShopResponse> addComputer(
             @NotNull @RequestParam Map<String, String> params,
             @PathVariable String productType
@@ -108,7 +119,7 @@ public class ShopController {
 
         Long cost = Long.parseLong(costString);
         Long count = Long.parseLong(countString);
-        Manufacturer manufacturer = Manufacturer.fromValue(manufacturerString);
+        Manufacturer manufacturer = manufacturerService.getManufacturerByName(manufacturerString);
 
         Product product;
         switch (ProductType.fromValue(productType.toUpperCase())) {
@@ -213,7 +224,7 @@ public class ShopController {
         }
 
         response = new ResponseEntity<>(
-                new SuccessfulResponse(ResponseType.PRODUCT, product, String.valueOf(System.currentTimeMillis())),
+                new SuccessfulResponse(ResponseType.OBJECT, product, String.valueOf(System.currentTimeMillis())),
                 HttpStatus.OK
         );
 
