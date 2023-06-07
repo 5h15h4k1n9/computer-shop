@@ -94,4 +94,8 @@ public abstract class Product {
     public void setManufacturer(Manufacturer manufacturer) {
         this.manufacturer = manufacturer;
     }
+
+    public void setSerialNumber(String serialNumberString) {
+        this.serialNumber = serialNumberString;
+    }
 }

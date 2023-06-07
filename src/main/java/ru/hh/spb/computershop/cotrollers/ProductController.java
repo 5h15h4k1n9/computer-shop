@@ -115,8 +115,8 @@ public class ProductController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/product")
-    public ResponseEntity<Object> getProductById(@RequestParam Long id) {
+    @GetMapping("/product/id/{id}")
+    public ResponseEntity<Object> getProductById(@PathVariable Long id) {
         logger.info("Client requested product with id {}", id);
 
         Product product = productService.getProduct(id);
@@ -141,6 +141,34 @@ public class ProductController {
         logger.info("Returning product with id {}", id);
         return new ResponseEntity<>(successfulResponse, HttpStatus.OK);
     }
+
+    @GetMapping("/product/serial-number/{serialNumber}")
+    public ResponseEntity<Object> getProductBySerialNumber(@PathVariable String serialNumber) {
+        logger.info("Client requested product with serial number {}", serialNumber);
+
+        Product product = productService.getProduct(serialNumber);
+
+        if (Objects.isNull(product)) {
+            logger.info("Product with serial number {} not found", serialNumber);
+
+            ErrorResponse errorResponse = new ErrorResponse(
+                    "Product with serial number " + serialNumber + " not found",
+                    HttpStatus.NOT_FOUND,
+                    String.valueOf(System.currentTimeMillis())
+            );
+            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        }
+
+        SuccessfulResponse successfulResponse = new SuccessfulResponse(
+                ResponseType.OBJECT,
+                product,
+                String.valueOf(System.currentTimeMillis())
+        );
+
+        logger.info("Returning product with serial number {}", serialNumber);
+        return new ResponseEntity<>(successfulResponse, HttpStatus.OK);
+    }
+
 
     @PostMapping("/product/add/{productType}")
     public ResponseEntity<ShopResponse> addComputer(
@@ -385,6 +413,12 @@ public class ProductController {
             }
 
             product.setManufacturer(manufacturer);
+            isUpdated = true;
+        }
+
+        String serialNumberString = params.get(ResponseParameter.SERIAL_NUMBER);
+        if (Objects.nonNull(serialNumberString)) {
+            product.setSerialNumber(serialNumberString);
             isUpdated = true;
         }
 

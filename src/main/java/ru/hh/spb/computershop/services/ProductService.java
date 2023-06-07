@@ -141,11 +141,11 @@ public class ProductService {
     }
 
     private boolean isProductExists(@NotNull Product product) {
-        String serialNumber = product.getSerialNumber();
+        Long id = product.getId();
 
         Iterable<Product> products = productRepository.findAll();
         for (Product p : products) {
-            if (p.getSerialNumber().equals(serialNumber)) {
+            if (p.getId().equals(id)) {
                 return true;
             }
         }
