@@ -1,4 +1,4 @@
-package ru.hh.spb.computershop.cotrollers;
+package ru.hh.spb.computershop.controllers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

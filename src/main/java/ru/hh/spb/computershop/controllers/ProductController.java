@@ -1,4 +1,4 @@
-package ru.hh.spb.computershop.cotrollers;
+package ru.hh.spb.computershop.controllers;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
