@@ -39,7 +39,7 @@ cd computer-shop
 ./mvnw clean package
 ```
 
-4. Run the application:
+4. Run the application (be sure that port 8080 is free):
 
 ```shell
 ./mvnw spring-boot:run
@@ -65,7 +65,7 @@ cd computer-shop
 mvnw.cmd clean package
 ```
 
-4. Run the application:
+4. Run the application (be sure that port 8080 is free)):
 
 ```shell
 mvnw.cmd spring-boot:run
