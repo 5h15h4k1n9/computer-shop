@@ -7,12 +7,12 @@ import ru.hh.spb.computershop.enums.Manufacturer;
 @Entity
 public class Monitor extends Product {
 
-    Long diagonal;
+    Byte diagonal;
 
     public Monitor() {
         super();
 
-        this.diagonal = 0L;
+        this.diagonal = 0;
     }
 
     public Monitor(
@@ -20,14 +20,14 @@ public class Monitor extends Product {
             Manufacturer manufacturer,
             Long cost,
             Long count,
-            Long diagonal
+            Byte diagonal
     ) {
         super(serialNumber, manufacturer, cost, count);
 
         this.diagonal = diagonal;
     }
 
-    public Long getDiagonal() {
+    public Byte getDiagonal() {
         return diagonal;
     }
 
