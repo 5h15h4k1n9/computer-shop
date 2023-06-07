@@ -1,6 +1,7 @@
 package ru.hh.spb.computershop.entities;
 
 import jakarta.persistence.Entity;
+
 import ru.hh.spb.computershop.enums.Manufacturer;
 
 @Entity

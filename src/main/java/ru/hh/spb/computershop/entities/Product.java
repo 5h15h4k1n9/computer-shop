@@ -1,6 +1,7 @@
 package ru.hh.spb.computershop.entities;
 
 import jakarta.persistence.*;
+
 import ru.hh.spb.computershop.enums.Manufacturer;
 import ru.hh.spb.computershop.enums.ProductType;
 
