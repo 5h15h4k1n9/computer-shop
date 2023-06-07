@@ -3,6 +3,7 @@ package ru.hh.spb.computershop.entities;
 import jakarta.persistence.*;
 
 import ru.hh.spb.computershop.data.ProductType;
+import ru.hh.spb.computershop.visitor.ProductVisitor;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -40,6 +41,8 @@ public abstract class Product {
         this.price = price;
         this.count = count;
     }
+
+    public abstract void accept(ProductVisitor visitor, String parameter);
 
     public void setId(Long id) {
         this.id = id;

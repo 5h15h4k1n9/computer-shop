@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 
 import ru.hh.spb.computershop.data.ComputerType;
 import ru.hh.spb.computershop.data.ProductType;
+import ru.hh.spb.computershop.visitor.ProductVisitor;
 
 @Entity
 public class Computer extends Product {
@@ -40,5 +41,13 @@ public class Computer extends Product {
                 superString +
                 ", computerType=" + computerType +
                 '}';
+    }
+
+    public void setComputerType(ComputerType type) {
+        this.computerType = type;
+    }
+
+    public void accept(ProductVisitor visitor, String computerType) {
+        visitor.visitComputer(this, computerType);
     }
 }

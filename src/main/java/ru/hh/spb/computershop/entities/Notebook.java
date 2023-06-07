@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 
 import ru.hh.spb.computershop.data.NotebookSize;
 import ru.hh.spb.computershop.data.ProductType;
+import ru.hh.spb.computershop.visitor.ProductVisitor;
 
 @Entity
 
@@ -41,5 +42,13 @@ public class Notebook extends Product {
                 superString +
                 ", notebookSize=" + notebookSize.getValue() +
                 '}';
+    }
+
+    public void setNotebookSize(NotebookSize size) {
+        this.notebookSize = size;
+    }
+
+    public void accept(ProductVisitor visitor, String notebookSize) {
+        visitor.visitNotebook(this, notebookSize);
     }
 }

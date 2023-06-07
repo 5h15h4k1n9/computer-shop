@@ -3,6 +3,7 @@ package ru.hh.spb.computershop.entities;
 import jakarta.persistence.Entity;
 
 import ru.hh.spb.computershop.data.ProductType;
+import ru.hh.spb.computershop.visitor.ProductVisitor;
 
 @Entity
 public class HDD extends Product {
@@ -39,5 +40,13 @@ public class HDD extends Product {
                 superString +
                 ", volume=" + volume +
                 '}';
+    }
+
+    public void setVolume(Long volume) {
+        this.volume = volume;
+    }
+
+    public void accept(ProductVisitor visitor, String volume) {
+        visitor.visitHDD(this, volume);
     }
 }

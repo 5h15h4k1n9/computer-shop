@@ -1,6 +1,7 @@
 package ru.hh.spb.computershop.entities;
 
 import jakarta.persistence.Entity;
+import ru.hh.spb.computershop.visitor.ProductVisitor;
 
 @Entity
 public class Monitor extends Product {
@@ -35,5 +36,13 @@ public class Monitor extends Product {
                 superString +
                 ", diagonal=" + diagonal +
                 '}';
+    }
+
+    public void setDiagonal(Byte diagonal) {
+        this.diagonal = diagonal;
+    }
+
+    public void accept(ProductVisitor visitor, String diagonal) {
+        visitor.visitMonitor(this, diagonal);
     }
 }
