@@ -16,11 +16,11 @@ public class Monitor extends Product {
     public Monitor(
             String serialNumber,
             Manufacturer manufacturer,
-            Long cost,
+            Long price,
             Long count,
             Byte diagonal
     ) {
-        super(serialNumber, manufacturer, cost, count);
+        super(serialNumber, manufacturer, price, count);
 
         this.diagonal = diagonal;
     }

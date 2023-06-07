@@ -34,10 +34,10 @@ public abstract class Product {
         this.count = 0L;
     }
 
-    public Product(String serialNumber, Manufacturer manufacturer, Long cost, Long count) {
+    public Product(String serialNumber, Manufacturer manufacturer, Long price, Long count) {
         this.serialNumber = serialNumber;
         this.manufacturer = manufacturer;
-        this.price = cost;
+        this.price = price;
         this.count = count;
     }
 
@@ -78,5 +78,17 @@ public abstract class Product {
                 ", count=" + count +
                 ", type=" + type +
                 ")";
+    }
+
+    public void setCost(Long cost) {
+        this.price = cost;
+    }
+
+    public void setCount(Long count) {
+        this.count = count;
+    }
+
+    public void setManufacturer(Manufacturer manufacturer) {
+        this.manufacturer = manufacturer;
     }
 }

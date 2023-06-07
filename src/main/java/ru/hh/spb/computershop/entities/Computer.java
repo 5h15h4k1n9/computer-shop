@@ -20,11 +20,11 @@ public class Computer extends Product {
     public Computer(
             String serialNumber,
             Manufacturer manufacturer,
-            Long cost,
+            Long price,
             Long count,
             ComputerType computerType
     ) {
-        super(serialNumber, manufacturer, cost, count);
+        super(serialNumber, manufacturer, price, count);
 
         this.type = ProductType.COMPUTER;
         this.computerType = computerType;

@@ -21,11 +21,11 @@ public class Notebook extends Product {
     public Notebook(
             String serialNumber,
             Manufacturer manufacturer,
-            Long cost,
+            Long price,
             Long count,
             NotebookSize notebookSize
     ) {
-        super(serialNumber, manufacturer, cost, count);
+        super(serialNumber, manufacturer, price, count);
 
         this.type = ProductType.NOTEBOOK;
         this.notebookSize = notebookSize;

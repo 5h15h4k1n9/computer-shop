@@ -19,11 +19,11 @@ public class HDD extends Product {
     public HDD(
             String serialNumber,
             Manufacturer manufacturer,
-            Long cost,
+            Long price,
             Long count,
             Long volume
     ) {
-        super(serialNumber, manufacturer, cost, count);
+        super(serialNumber, manufacturer, price, count);
 
         this.type = ProductType.HDD;
         this.volume = volume;
