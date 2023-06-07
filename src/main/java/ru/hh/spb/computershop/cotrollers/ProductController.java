@@ -156,16 +156,36 @@ public class ProductController {
             return response;
         }
 
-        String costString = params.get(ResponseParameter.COST);
-        response = checkParameter(costString, ResponseParameter.COST);
+        String priceString = params.get(ResponseParameter.PRICE);
+        response = checkParameter(priceString, ResponseParameter.PRICE);
         if (Objects.nonNull(response)) {
             return response;
+        }
+        if (!priceString.matches("\\d+")) {
+            logger.info("Cost {} is not a number", priceString);
+
+            ErrorResponse errorResponse = new ErrorResponse(
+                    "Cost " + priceString + " is not a number",
+                    HttpStatus.BAD_REQUEST,
+                    String.valueOf(System.currentTimeMillis())
+            );
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
 
         String countString = params.get(ResponseParameter.COUNT);
         response = checkParameter(countString, ResponseParameter.COUNT);
         if (Objects.nonNull(response)) {
             return response;
+        }
+        if (!countString.matches("\\d+")) {
+            logger.info("Count {} is not a number", countString);
+
+            ErrorResponse errorResponse = new ErrorResponse(
+                    "Count " + countString + " is not a number",
+                    HttpStatus.BAD_REQUEST,
+                    String.valueOf(System.currentTimeMillis())
+            );
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
 
         String manufacturerString = params.get(ResponseParameter.MANUFACTURER);
@@ -175,7 +195,7 @@ public class ProductController {
         }
 
 
-        Long cost = Long.parseLong(costString);
+        Long price = Long.parseLong(priceString);
         Long count = Long.parseLong(countString);
         Manufacturer manufacturer = manufacturerService.getManufacturerByName(manufacturerString);
 
@@ -189,7 +209,7 @@ public class ProductController {
                 }
 
                 ComputerType computerType = ComputerType.fromValue(computerTypeString);
-                product = productService.saveProduct(serialNumber, manufacturer, cost, count, computerType);
+                product = productService.saveProduct(serialNumber, manufacturer, price, count, computerType);
             }
             case NOTEBOOK -> {
                 String sizeString = params.get(ResponseParameter.NOTEBOOK_SIZE);
@@ -211,7 +231,7 @@ public class ProductController {
                 }
 
                 NotebookSize notebookSize = NotebookSize.fromValue(Integer.parseInt(sizeString));
-                product = productService.saveProduct(serialNumber, manufacturer, cost, count, notebookSize);
+                product = productService.saveProduct(serialNumber, manufacturer, price, count, notebookSize);
             }
             case MONITOR -> {
                 String diagonalString = params.get(ResponseParameter.DIAGONAL);
@@ -233,7 +253,7 @@ public class ProductController {
                 }
 
                 Byte diagonal = Byte.parseByte(diagonalString);
-                product = productService.saveProduct(serialNumber, manufacturer, cost, count, diagonal);
+                product = productService.saveProduct(serialNumber, manufacturer, price, count, diagonal);
             }
             case HDD -> {
                 String volumeString = params.get(ResponseParameter.VOLUME);
@@ -255,7 +275,7 @@ public class ProductController {
                 }
 
                 Long volume = Long.parseLong(volumeString);
-                product = productService.saveProduct(serialNumber, manufacturer, cost, count, volume);
+                product = productService.saveProduct(serialNumber, manufacturer, price, count, volume);
             }
             default -> {
                 logger.warn("Unknown product type {}", productType);
@@ -288,6 +308,108 @@ public class ProductController {
 
         logger.info("Successfully added product with serial number {}", serialNumber);
         return response;
+    }
+
+    @PutMapping("/product/update/{serialNumber}")
+    public ResponseEntity<ShopResponse> updateProduct(
+            @RequestParam Map<String, String> params,
+            @PathVariable String serialNumber
+    ) {
+        logger.info("Client requested to update product with serial number {}", serialNumber);
+
+        Product product = productService.getProduct(serialNumber);
+        if (Objects.isNull(product)) {
+            logger.info("Product with serial number {} not found", serialNumber);
+
+            ErrorResponse errorResponse = new ErrorResponse(
+                    "Product with serial number " + serialNumber + " not found",
+                    HttpStatus.NOT_FOUND,
+                    String.valueOf(System.currentTimeMillis())
+            );
+            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        }
+
+        boolean isUpdated = false;
+
+        String costString = params.get(ResponseParameter.PRICE);
+        if (Objects.nonNull(costString)) {
+            if (!costString.matches("\\d+")) {
+                logger.warn("Invalid cost {}", costString);
+
+                ErrorResponse errorResponse = new ErrorResponse(
+                        "Invalid cost " + costString,
+                        HttpStatus.BAD_REQUEST,
+                        String.valueOf(System.currentTimeMillis())
+                );
+
+                return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+            }
+
+            Long cost = Long.parseLong(costString);
+            product.setCost(cost);
+            isUpdated = true;
+        }
+
+        String countString = params.get(ResponseParameter.COUNT);
+        if (Objects.nonNull(countString)) {
+            if (!countString.matches("\\d+")) {
+                logger.warn("Invalid count {}", countString);
+
+                ErrorResponse errorResponse = new ErrorResponse(
+                        "Invalid count " + countString,
+                        HttpStatus.BAD_REQUEST,
+                        String.valueOf(System.currentTimeMillis())
+                );
+
+                return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+            }
+
+            Long count = Long.parseLong(countString);
+            product.setCount(count);
+            isUpdated = true;
+        }
+
+        String manufacturerString = params.get(ResponseParameter.MANUFACTURER);
+        if (Objects.nonNull(manufacturerString)) {
+            Manufacturer manufacturer = manufacturerService.getManufacturerByName(manufacturerString);
+            if (Objects.isNull(manufacturer)) {
+                logger.info("Manufacturer with name {} not found", manufacturerString);
+
+                ErrorResponse errorResponse = new ErrorResponse(
+                        "Manufacturer with name " + manufacturerString + " not found",
+                        HttpStatus.NOT_FOUND,
+                        String.valueOf(System.currentTimeMillis())
+                );
+                return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+            }
+
+            product.setManufacturer(manufacturer);
+            isUpdated = true;
+        }
+
+        String computerTypeString = params.get(ResponseParameter.COMPUTER_TYPE);
+        String sizeString = params.get(ResponseParameter.NOTEBOOK_SIZE);
+        String diagonalString = params.get(ResponseParameter.DIAGONAL);
+        String volumeString = params.get(ResponseParameter.VOLUME);
+
+
+        if (isUpdated) {
+            productService.updateProduct(product);
+            logger.info("Product with serial number {} successfully updated", serialNumber);
+
+            return new ResponseEntity<>(
+                    new SuccessfulResponse(ResponseType.OBJECT, product, String.valueOf(System.currentTimeMillis())),
+                    HttpStatus.OK
+            );
+        }
+
+        logger.info("Product with serial number {} not updated", serialNumber);
+        ErrorResponse errorResponse = new ErrorResponse(
+                "Product with serial number " + serialNumber + " not updated",
+                HttpStatus.BAD_REQUEST,
+                String.valueOf(System.currentTimeMillis())
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
 

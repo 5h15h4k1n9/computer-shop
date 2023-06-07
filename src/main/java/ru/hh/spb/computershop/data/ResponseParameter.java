@@ -3,7 +3,7 @@ package ru.hh.spb.computershop.data;
 public class ResponseParameter {
 
     public final static String SERIAL_NUMBER = "serialNumber";
-    public final static String COST = "cost";
+    public final static String PRICE = "price";
     public final static String COUNT = "count";
     public final static String MANUFACTURER = "manufacturer";
     public final static String VOLUME = "volume";

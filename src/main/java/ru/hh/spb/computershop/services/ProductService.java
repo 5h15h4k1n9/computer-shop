@@ -106,8 +106,23 @@ public class ProductService {
         return productRepository.save(product);
     }
 
+    public Product updateProduct(Product product) {
+        logger.info("Updating product {}", product);
+
+        if (!isProductExists(product)) {
+            logger.info("Product {} doesn't exist", product);
+            return null;
+        }
+
+        return productRepository.save(product);
+    }
+
     public Product getProduct(Long id) {
         return productRepository.findById(id).orElse(null);
+    }
+
+    public Product getProduct(String serialNumber) {
+        return productRepository.getProductsBySerialNumber(serialNumber);
     }
 
     public List<Product> getProductsByType(ProductType type) {

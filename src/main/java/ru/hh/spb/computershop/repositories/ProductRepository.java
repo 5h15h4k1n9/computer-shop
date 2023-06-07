@@ -14,6 +14,8 @@ interface ProductRepository extends CrudRepository<Product, Long> {
 
     Product getProductById(Long id);
 
+    Product getProductsBySerialNumber(String serialNumber);
+
     List<Product> getProductsByType(ProductType type);
 
     List<Product> getProductsByManufacturer(Manufacturer manufacturer);
