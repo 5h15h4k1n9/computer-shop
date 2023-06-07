@@ -2,6 +2,7 @@ package ru.hh.spb.computershop.enums;
 
 public enum Manufacturer implements java.io.Serializable {
 
+    UNKNOWN,
     ASUS,
     ACER,
     APPLE,

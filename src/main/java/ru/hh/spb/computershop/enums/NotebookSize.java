@@ -2,6 +2,8 @@ package ru.hh.spb.computershop.enums;
 
 enum NotebookSize implements java.io.Serializable {
 
+    UNKNOWN(0),
+
     THIRTEEN(13),
     FOURTEEN(14),
     FIFTEEN(15),
