@@ -1,9 +1,9 @@
 package ru.hh.spb.computershop.entities;
 
-import jakarta.persistence.*;
-
 import ru.hh.spb.computershop.data.ProductType;
 import ru.hh.spb.computershop.visitor.ProductVisitor;
+
+import javax.persistence.*;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)

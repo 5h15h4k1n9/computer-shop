@@ -1,6 +1,6 @@
 package ru.hh.spb.computershop.entities;
 
-import jakarta.persistence.Entity;
+import javax.persistence.Entity;
 
 import ru.hh.spb.computershop.data.ComputerType;
 import ru.hh.spb.computershop.data.ProductType;

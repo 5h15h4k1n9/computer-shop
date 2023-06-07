@@ -1,6 +1,6 @@
 package ru.hh.spb.computershop.entities;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import java.util.List;
 public class Manufacturer {
 
     @Id
-    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY, generator = "MANUFACTURER_ID_SEQ")
+    @GeneratedValue(strategy = javax.persistence.GenerationType.IDENTITY, generator = "MANUFACTURER_ID_SEQ")
     private Long id;
 
     @Column(unique = true, nullable = false, length = 20)

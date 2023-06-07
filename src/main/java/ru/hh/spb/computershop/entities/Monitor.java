@@ -1,6 +1,6 @@
 package ru.hh.spb.computershop.entities;
 
-import jakarta.persistence.Entity;
+import javax.persistence.Entity;
 import ru.hh.spb.computershop.visitor.ProductVisitor;
 
 @Entity
