@@ -39,7 +39,7 @@ public class ManufacturerController {
         );
 
         ShopResponse response = new SuccessfulResponse(
-                ResponseType.OBJECT,
+                ResponseType.LISTING,
                 data,
                 String.valueOf(System.currentTimeMillis())
         );
@@ -49,7 +49,7 @@ public class ManufacturerController {
 
     @GetMapping("/add")
     public ResponseEntity<ShopResponse> addManufacturer(String name) {
-        logger.info("Client requested to add manufacturer with name: {}", name);
+        logger.info("Client requested to add manufacturer with name '{}'", name);
 
         Manufacturer manufacturer = manufacturerService.saveManufacturer(name);
         if (manufacturer == null) {
