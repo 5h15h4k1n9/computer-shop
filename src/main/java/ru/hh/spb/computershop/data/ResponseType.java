@@ -1,4 +1,4 @@
-package ru.hh.spb.computershop.enums;
+package ru.hh.spb.computershop.data;
 
 public enum ResponseType {
 

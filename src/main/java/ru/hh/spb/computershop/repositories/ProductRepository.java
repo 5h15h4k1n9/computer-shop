@@ -3,7 +3,7 @@ package ru.hh.spb.computershop.repositories;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import ru.hh.spb.computershop.entities.Product;
-import ru.hh.spb.computershop.enums.ProductType;
+import ru.hh.spb.computershop.data.ProductType;
 
 import java.util.List;
 

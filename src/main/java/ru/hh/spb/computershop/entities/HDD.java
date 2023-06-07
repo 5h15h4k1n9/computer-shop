@@ -2,8 +2,8 @@ package ru.hh.spb.computershop.entities;
 
 import jakarta.persistence.Entity;
 
-import ru.hh.spb.computershop.enums.Manufacturer;
-import ru.hh.spb.computershop.enums.ProductType;
+import ru.hh.spb.computershop.data.Manufacturer;
+import ru.hh.spb.computershop.data.ProductType;
 
 @Entity
 public class HDD extends Product {

@@ -2,8 +2,8 @@ package ru.hh.spb.computershop.entities;
 
 import jakarta.persistence.*;
 
-import ru.hh.spb.computershop.enums.Manufacturer;
-import ru.hh.spb.computershop.enums.ProductType;
+import ru.hh.spb.computershop.data.Manufacturer;
+import ru.hh.spb.computershop.data.ProductType;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)

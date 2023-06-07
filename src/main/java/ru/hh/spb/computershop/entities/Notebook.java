@@ -2,9 +2,9 @@ package ru.hh.spb.computershop.entities;
 
 import jakarta.persistence.Entity;
 
-import ru.hh.spb.computershop.enums.Manufacturer;
-import ru.hh.spb.computershop.enums.NotebookSize;
-import ru.hh.spb.computershop.enums.ProductType;
+import ru.hh.spb.computershop.data.Manufacturer;
+import ru.hh.spb.computershop.data.NotebookSize;
+import ru.hh.spb.computershop.data.ProductType;
 
 @Entity
 
@@ -40,7 +40,7 @@ public class Notebook extends Product {
         String superString = super.toString();
         return "Notebook{" +
                 superString +
-                ", notebookSize=" + notebookSize +
+                ", notebookSize=" + notebookSize.getValue() +
                 '}';
     }
 }

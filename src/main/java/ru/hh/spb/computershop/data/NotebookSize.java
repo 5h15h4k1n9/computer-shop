@@ -1,4 +1,4 @@
-package ru.hh.spb.computershop.enums;
+package ru.hh.spb.computershop.data;
 
 public enum NotebookSize implements java.io.Serializable {
 
@@ -18,5 +18,14 @@ public enum NotebookSize implements java.io.Serializable {
 
     NotebookSize(int value) {
         this.value = value;
+    }
+
+    public static NotebookSize fromValue(int value) {
+        for (NotebookSize size : values()) {
+            if (size.value == value) {
+                return size;
+            }
+        }
+        return UNKNOWN;
     }
 }
