@@ -2,6 +2,7 @@ package ru.hh.spb.computershop.repositories;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
+import ru.hh.spb.computershop.entities.Manufacturer;
 import ru.hh.spb.computershop.entities.Product;
 import ru.hh.spb.computershop.data.ProductType;
 
@@ -14,4 +15,6 @@ interface ProductRepository extends CrudRepository<Product, Long> {
     Product getProductById(Long id);
 
     List<Product> getProductsByType(ProductType type);
+
+    List<Product> getProductsByManufacturer(Manufacturer manufacturer);
 }

@@ -114,6 +114,10 @@ public class ProductService {
         return productRepository.getProductsByType(type);
     }
 
+    public List<Product> getProductsByManufacturer(Manufacturer manufacturer) {
+        return productRepository.getProductsByManufacturer(manufacturer);
+    }
+
     public List<Product> getAllProducts() {
         List<Product> products = (List<Product>) productRepository.findAll();
         logger.info("Found {} products", products.size());

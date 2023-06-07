@@ -56,7 +56,7 @@ public class ProductController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/all/{productType}")
+    @GetMapping("/all/type/{productType}")
     public ResponseEntity<ShopResponse> getAllProductsByType(@PathVariable String productType) {
         logger.info("Client requested all products with type {}", productType);
 
@@ -65,6 +65,41 @@ public class ProductController {
         int count = products.size();
 
         logger.info("Returning {} products with type {}", count, productType);
+        Map<String, Object> data = Map.of(
+                "count", count,
+                "products", products
+        );
+
+        ShopResponse response = new SuccessfulResponse(
+                ResponseType.LISTING,
+                data,
+                String.valueOf(System.currentTimeMillis())
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/all/manufacturer/{manufacturerName}")
+    public ResponseEntity<ShopResponse> getAllProductsByManufacturer(@PathVariable String manufacturerName) {
+        logger.info("Client requested all products with manufacturer {}", manufacturerName);
+
+        Manufacturer manufacturer = manufacturerService.getManufacturerByName(manufacturerName);
+        if (Objects.isNull(manufacturer)) {
+            logger.info("Manufacturer {} not found", manufacturerName);
+
+            ErrorResponse errorResponse = new ErrorResponse(
+                    "Manufacturer " + manufacturerName + " not found",
+                    HttpStatus.NOT_FOUND,
+                    String.valueOf(System.currentTimeMillis())
+            );
+
+            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        }
+
+        List<Product> products = productService.getProductsByManufacturer(manufacturer);
+        int count = products.size();
+
+        logger.info("Returning {} products with manufacturer {}", count, manufacturerName);
         Map<String, Object> data = Map.of(
                 "count", count,
                 "products", products
